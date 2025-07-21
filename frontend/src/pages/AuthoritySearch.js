@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import API from '../api/axios';
 import { Bar } from 'react-chartjs-2';
@@ -7,26 +8,41 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AuthoritySearch = () => {
   const [query, setQuery] = useState('');
-  const [data, setData] = useState(null);
+  const [results, setResults] = useState([]);
+  const [selectedCivilian, setSelectedCivilian] = useState(null);
   const [error, setError] = useState('');
 
+  // Step 1: Search civilians by name/email/houseNo
   const handleSearch = async () => {
     try {
-      const res = await API.get(`/users/civilians/search?query=${query}`);
-      setData(res.data);
+      const res = await API.get(`/authority/search-civilians?query=${query}`);
+      setResults(res.data);
       setError('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Error searching civilian');
-      setData(null);
+      setError(err.response?.data?.message || 'Error searching civilians');
+      setResults([]);
     }
   };
 
-  const chartData = data ? {
+  // Step 2: Fetch full details of a selected civilian
+  const fetchDetails = async (id) => {
+    try {
+      const res = await API.get(`/authority/civilian-details/${id}`);
+      setSelectedCivilian(res.data);
+    } catch (err) {
+      setError('Failed to fetch details');
+    }
+  };
+
+  const chartData = selectedCivilian ? {
     labels: ['Good Deeds', 'Bad Deeds'],
     datasets: [
       {
         label: 'Count',
-        data: [data.goodDeeds.length, data.badDeeds.length],
+        data: [
+          selectedCivilian.goodDeeds.length,
+          selectedCivilian.badDeeds.length
+        ],
         backgroundColor: ['#4caf50', '#f44336']
       }
     ]
@@ -48,20 +64,41 @@ const AuthoritySearch = () => {
 
       {error && <p className="text-danger">{error}</p>}
 
-      {data && (
+      {!selectedCivilian && results.length > 0 && (
         <div>
-          <h4>{data.civilian.name} ({data.civilian.email})</h4>
-          <p>House No: {data.civilian.houseNo}</p>
+          <h5>Select a Civilian:</h5>
+          {results.map((civ) => (
+            <div key={civ._id} className="d-flex justify-content-between border p-2 mb-2">
+              <span>{civ.name} ({civ.email})</span>
+              <button className="btn btn-sm btn-info" onClick={() => fetchDetails(civ._id)}>
+                View Details
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {selectedCivilian && (
+        <div>
+          <h4>{selectedCivilian.civilian.name} ({selectedCivilian.civilian.email})</h4>
+          <p>House No: {selectedCivilian.civilian.houseNo}</p>
 
           <div style={{ width: '400px', margin: '20px auto' }}>
             <Bar data={chartData} />
           </div>
 
           <h5>Good Deeds:</h5>
-          <ul>{data.goodDeeds.map((d, i) => <li key={i}>{d.content}</li>)}</ul>
+          <ul>{selectedCivilian.goodDeeds.map((d, i) => <li key={i}>{d.content}</li>)}</ul>
 
           <h5>Bad Deeds:</h5>
-          <ul>{data.badDeeds.map((d, i) => <li key={i}>{d.reason}</li>)}</ul>
+          <ul>{selectedCivilian.badDeeds.map((d, i) => <li key={i}>{d.content}</li>)}</ul>
+
+          <button
+            className="btn btn-secondary mt-3"
+            onClick={() => setSelectedCivilian(null)}
+          >
+            Back to Results
+          </button>
         </div>
       )}
     </div>

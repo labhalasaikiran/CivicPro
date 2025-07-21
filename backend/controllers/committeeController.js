@@ -24,31 +24,12 @@ res.json(deedsWithComments);
   }
 };
 
-// comment on a good deed
-// exports.addComment = async (req, res) => {
-//   try {
-//     const { goodDeedId, content } = req.body;
-
-//     const comment = await Comment.create({
-//       goodDeedId,
-//       userId: req.user._id,
-//       content
-//     });
-
-//     const populatedComment = await comment.populate('userId', 'name role');
-
-//     res.status(201).json(populatedComment);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Failed to add comment' });
-//   }
-// };
 
 
 exports.addComment = async (req, res) => {
   try {
-    const { text } = req.body; // comment text
-    const { id } = req.params; // GoodDeed ID from URL
+    const { text } = req.body; 
+    const { id } = req.params; 
 
     // Check if GoodDeed exists
     const goodDeed = await GoodDeed.findById(id);

@@ -74,8 +74,8 @@ const LoginSignup = () => {
           <button type="submit" className="btn btn-success w-100">{isLogin ? 'Login' : 'Signup'}</button>
         </form>
 
-        <div className="text-center mt-3">
-          <small>
+  <div className="text-center mt-3">
+          <small>        
             {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
             <span className="text-primary" role="button" style={{ cursor: 'pointer' }} onClick={() => setIsLogin(!isLogin)}>
               {isLogin ? 'Signup' : 'Login'}
