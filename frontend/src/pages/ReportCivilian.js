@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import API from '../api/axios';
 
@@ -7,6 +9,7 @@ const ReportCivilian = () => {
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
 
+  // Search civilians far reporting
   const handleSearch = async () => {
     try {
       const res = await API.get(`/authority/search-civilians?query=${search}`);
@@ -17,6 +20,7 @@ const ReportCivilian = () => {
     }
   };
 
+  
   const handleUpload = async () => {
     if (!file) return { mediaUrl: null, mediaType: null };
     const formData = new FormData();
@@ -25,6 +29,7 @@ const ReportCivilian = () => {
     return { mediaUrl: res.data.url, mediaType: res.data.type };
   };
 
+  // Report civilian
   const handleReport = async (e) => {
     e.preventDefault();
     try {

@@ -82,9 +82,9 @@ const CivilianDashboard = () => {
                   <strong>{deed.content}</strong><br />
                   {deed.mediaUrl && (
                     deed.mediaType === 'image' ? (
-                      <img src={deed.mediaUrl} alt="" width="100" />
+                      <img src={deed.mediaUrl} alt="" width="300" />
                     ) : deed.mediaType === 'video' ? (
-                      <video controls src={deed.mediaUrl} width="200" />
+                      <video controls src={deed.mediaUrl} width="300" />
                     ) : (
                       <audio controls src={deed.mediaUrl} />
                     )

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import API from '../api/axios';
 import { Bar } from 'react-chartjs-2';
@@ -7,9 +8,11 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AuthoritySearch = () => {
   const [query, setQuery] = useState('');
-  const [data, setData] = useState(null);
+  const [results, setResults] = useState([]);
+  const [selectedCivilian, setSelectedCivilian] = useState(null);
   const [error, setError] = useState('');
 
+  // Step 1: Search civilians by name/email/houseNo
   const handleSearch = async () => {
     if (!query.trim()) return setError('Enter search query');
     try {
@@ -17,8 +20,18 @@ const AuthoritySearch = () => {
       setData(res.data);
       setError('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Error searching civilian');
-      setData(null);
+      setError(err.response?.data?.message || 'Error searching civilians');
+      setResults([]);
+    }
+  };
+
+  // Step 2: Fetch full details of a selected civilian
+  const fetchDetails = async (id) => {
+    try {
+      const res = await API.get(`/authority/civilian-details/${id}`);
+      setSelectedCivilian(res.data);
+    } catch (err) {
+      setError('Failed to fetch details');
     }
   };
 

@@ -28,8 +28,8 @@ res.json(deedsWithComments);
 
 exports.addComment = async (req, res) => {
   try {
-    const { text } = req.body; // comment text
-    const { id } = req.params; // GoodDeed ID from URL
+    const { text } = req.body; 
+    const { id } = req.params; 
 
     // Check if GoodDeed exists
     const goodDeed = await GoodDeed.findById(id);

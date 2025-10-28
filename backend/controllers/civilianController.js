@@ -4,7 +4,7 @@ const Announcement = require('../models/Announcement');
 const Complaint = require('../models/Complaint');
 const User = require('../models/User');
 
-// Dashboard: Get good/bad deed stats and history
+//  good/bad history
 exports.getDashboard = async (req, res) => {
   const goodDeeds = await GoodDeed.find({ userId: req.user._id, status: 'approved' });
   const badDeeds = await BadDeed.find({ civilianId: req.user._id });
@@ -16,7 +16,7 @@ exports.getDashboard = async (req, res) => {
   });
 };
 
-// Post a good deed
+// post a good deed
 exports.postGoodDeed = async (req, res) => {
   const { content, mediaUrl, mediaType } = req.body;
   const deed = await GoodDeed.create({
