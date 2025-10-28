@@ -49,8 +49,8 @@ const PostGoodDeed = () => {
           <textarea className="form-control" rows="4" value={content} onChange={e => setContent(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label>Attach Media (image, audio, video)</label>
-          <input type="file" name="file" className="form-control" accept="image/*,video/*,audio/*" onChange={e => setFile(e.target.files[0])} />
+          <label>Attach Media (image, video)*</label>
+          <input type="file" name="file" className="form-control" accept="image/*,video/*,audio/*" onChange={e => setFile(e.target.files[0])} required/>
         </div>
         <button type="submit" className="btn btn-success">Submit Deed</button>
       </form>

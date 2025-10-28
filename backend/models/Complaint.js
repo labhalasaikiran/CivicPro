@@ -5,6 +5,11 @@ const complaintSchema = new mongoose.Schema({
   content: String,
   mediaUrl: String,
   mediaType: String,
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Complaint', complaintSchema);

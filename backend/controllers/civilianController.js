@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 // Dashboard: Get good/bad deed stats and history
 exports.getDashboard = async (req, res) => {
-  const goodDeeds = await GoodDeed.find({ userId: req.user._id });
+  const goodDeeds = await GoodDeed.find({ userId: req.user._id, status: 'approved' });
   const badDeeds = await BadDeed.find({ civilianId: req.user._id });
   res.json({
     goodDeedsCount: goodDeeds.length,
@@ -23,7 +23,8 @@ exports.postGoodDeed = async (req, res) => {
     userId: req.user._id,
     content,
     mediaUrl,
-    mediaType
+    mediaType,
+    status: 'pending'
   });
   res.status(201).json(deed);
 };
@@ -36,7 +37,7 @@ exports.getAnnouncements = async (req, res) => {
 
 // Complaints
 exports.getComplaints = async (req, res) => {
-  const complaints = await Complaint.find().sort({ createdAt: -1 });
+  const complaints = await Complaint.find({ filedBy: req.user._id, status: 'approved' }).sort({ createdAt: -1 });
   res.json(complaints);
 };
 
@@ -46,7 +47,8 @@ exports.submitComplaint = async (req, res) => {
     filedBy: req.user._id,
     content,
     mediaUrl,
-    mediaType
+    mediaType,
+    status: 'pending'
   });
   res.status(201).json(complaint);
 };

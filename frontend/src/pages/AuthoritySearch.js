@@ -11,8 +11,9 @@ const AuthoritySearch = () => {
   const [error, setError] = useState('');
 
   const handleSearch = async () => {
+    if (!query.trim()) return setError('Enter search query');
     try {
-      const res = await API.get(`/users/civilians/search?query=${query}`);
+      const res = await API.get(`/authority/search-civilians?query=${encodeURIComponent(query)}`);
       setData(res.data);
       setError('');
     } catch (err) {
@@ -21,47 +22,116 @@ const AuthoritySearch = () => {
     }
   };
 
-  const chartData = data ? {
-    labels: ['Good Deeds', 'Bad Deeds'],
-    datasets: [
-      {
-        label: 'Count',
-        data: [data.goodDeeds.length, data.badDeeds.length],
-        backgroundColor: ['#4caf50', '#f44336']
+  const chartData = data
+    ? {
+        labels: ['Good Deeds', 'Bad Deeds'],
+        datasets: [
+          {
+            label: 'Counts',
+            data: [data.goodDeeds?.length || 0, data.badDeeds?.length || 0],
+            backgroundColor: ['#28a745', '#dc3545'],
+            borderRadius: 6,
+          },
+        ],
       }
-    ]
-  } : null;
+    : null;
 
   return (
-    <div className="container mt-4">
-      <h2>Search Civilian Portal</h2>
-      <div className="d-flex mb-3">
+    <div className="container mt-4" style={{ maxWidth: 1000 }}>
+      <h3 className="mb-3">Search Civilian Portal</h3>
+
+      <div className="input-group mb-3">
         <input
           type="text"
-          className="form-control me-2"
-          placeholder="Enter name, email, or house number"
+          className="form-control"
+          placeholder="Enter name, email, house number, phone, or address"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         />
-        <button className="btn btn-primary" onClick={handleSearch}>Search</button>
+        <button className="btn btn-primary" type="button" onClick={handleSearch}>
+          Search
+        </button>
       </div>
 
-      {error && <p className="text-danger">{error}</p>}
+      {error && <div className="text-danger mb-3">{error}</div>}
 
-      {data && (
-        <div>
-          <h4>{data.civilian.name} ({data.civilian.email})</h4>
-          <p>House No: {data.civilian.houseNo}</p>
+      {data && data.civilian && (
+        <div className="search-results">
+          <div className="profile-row">
+            <div className="search-profile-card">
+              <div className="profile-top">
+                <img
+                  src={data.civilian.profilePic || '/communityprologo.png'}
+                  alt="avatar"
+                  className="profile-avatar"
+                />
+                <div className="profile-info">
+                  <h4>{data.civilian.name}</h4>
+                  <div className="muted">{data.civilian.email}</div>
+                  <div className="muted">House: {data.civilian.houseNo || 'N/A'}</div>
+                  <div className="muted">Phone: {data.civilian.phone || 'N/A'}</div>
+                </div>
+              </div>
 
-          <div style={{ width: '400px', margin: '20px auto' }}>
-            <Bar data={chartData} />
+              <div className="profile-stats">
+                <div className="stat">
+                  <div className="stat-num text-success">{data.goodDeeds?.length || 0}</div>
+                  <div className="stat-label">Good Deeds</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-num text-danger">{data.badDeeds?.length || 0}</div>
+                  <div className="stat-label">Bad Deeds</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-num text-muted">{data.goodDeeds?.length + (data.badDeeds?.length || 0)}</div>
+                  <div className="stat-label">Total Records</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="chart-card">
+              {chartData ? (
+                <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+              ) : (
+                <div className="text-muted">No data</div>
+              )}
+            </div>
           </div>
 
-          <h5>Good Deeds:</h5>
-          <ul>{data.goodDeeds.map((d, i) => <li key={i}>{d.content}</li>)}</ul>
+          <div className="deeds-section">
+            <div className="deeds-list">
+              <h5 className="section-title">Good Deeds</h5>
+              {data.goodDeeds && data.goodDeeds.length > 0 ? (
+                <ul className="list-plain">
+                  {data.goodDeeds.map((d, i) => (
+                    <li key={i} className="deed-item deed-good">
+                      <strong>{d.content}</strong>
+                      <div className="deed-meta">{new Date(d.createdAt).toLocaleString()}</div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No good deeds found.</p>
+              )}
+            </div>
 
-          <h5>Bad Deeds:</h5>
-          <ul>{data.badDeeds.map((d, i) => <li key={i}>{d.reason}</li>)}</ul>
+            <div className="deeds-list">
+              <h5 className="section-title text-danger">Bad Deeds / Reports</h5>
+              {data.badDeeds && data.badDeeds.length > 0 ? (
+                <ul className="list-plain">
+                  {data.badDeeds.map((d, i) => (
+                    <li key={i} className="deed-item deed-bad">
+                      <strong>{d.content || d.reason}</strong>
+                      <div className="deed-meta">{new Date(d.createdAt).toLocaleString()}</div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No bad deeds or reports found.</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

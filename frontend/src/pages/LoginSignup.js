@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import API from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { saveAuth } from '../utils/auth';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/LoginSignup.css';
 
 const LoginSignup = () => {
   const navigate = useNavigate();
@@ -10,9 +10,9 @@ const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState('civilian');
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [showAbout, setShowAbout] = useState(false);
 
   const handleChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -29,58 +29,127 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-      <div className="text-center mb-4">
-        <img src="https://www.shutterstock.com/image-vector/icon-illustration-concept-family-care-600nw-1077028331.jpg" alt="Logo" style={{ width: '80px', height: '80px', marginBottom: '10px' }} />
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: 'whitesmoke' }}>Civilian Credit System</h1>
-        <p style={{ fontSize: '1rem', color: 'whitesmoke' }}>Track your civic deeds and stay accountable</p>
-      </div>
-
-      <div className="login-container">
-        <h2 className="text-center mb-4">{isLogin ? 'Login' : 'Signup'}</h2>
-
-        <div className="d-flex justify-content-center gap-2 mb-3">
-          <button
-            type="button"
-            className={`btn btn-sm ${role === 'civilian' ? 'btn-primary' : 'btn-outline-primary'}`}
-            onClick={() => setRole('civilian')}
-          >
-            Civilian
-          </button>
-          <button
-            type="button"
-            className={`btn btn-sm ${role === 'authority' ? 'btn-primary' : 'btn-outline-primary'}`}
-            onClick={() => setRole('authority')}
-          >
-            Authority
-          </button>
+    <div className={`login-bg login-gradient ${isLogin ? 'is-login' : 'is-signup'}`}>
+      <div className="login-row">
+        {/* Left: Login/Signup Card */}
+        <div className="login-right">
+          <div className="login-card login-card-attractive">
+            <h1 className="login-welcome text-success">CommunityPro</h1>
+            <p className="login-tagline">Change Starts with Us</p>
+            <h2 className="login-card-title">
+              {isLogin ? 'Log In' : 'Sign Up'}
+            </h2>
+            <div className="login-role-switch">
+              <button
+                type="button"
+                className={role === 'civilian' ? 'login-role-btn active' : 'login-role-btn'}
+                onClick={() => setRole('civilian')}
+              >
+                Civilian
+              </button>
+              <button
+                type="button"
+                className={role === 'authority' ? 'login-role-btn active' : 'login-role-btn'}
+                onClick={() => setRole('authority')}
+              >
+                Authority
+              </button>
+            </div>
+            <form className="login-form" onSubmit={handleSubmit}>
+              {!isLogin && (
+                <div className="login-field">
+                  <label>Full Name</label>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    placeholder="Enter your name"
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    required 
+                  />
+                </div>
+              )}
+              <div className="login-field">
+                <label>Email Address</label>
+                <input 
+                  type="email" 
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              <div className="login-field">
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  name="password"
+                  placeholder="Enter your password"
+                  value={formData.password} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              <button type="submit" className="login-submit-btn">
+                {isLogin ? 'Log In' : 'Sign Up'}
+              </button>
+              {isLogin && (
+                <div className="login-forgot">
+                  <a href="/forgot-password">Forgot Password?</a>
+                </div>
+              )}
+            </form>
+            <hr className="login-divider" />
+            <div className="login-toggle">
+              <small>
+                {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+                <span className="login-toggle-link" onClick={() => setIsLogin(!isLogin)}>
+                  {isLogin ? 'Sign Up' : 'Log In'}
+                </span>
+              </small>
+            </div>
+          </div>
         </div>
+        {/* Right: Logo and inline About (in-place) */}
+        <div className={`login-logo-side ${showAbout ? 'show-about' : ''}`}>
+          {!showAbout && (
+            <img
+              src="/communityprologo.png"
+              alt="Logo"
+              className="login-logo-large"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowAbout(true)}
+            />
+          )}
 
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <div className="mb-3">
-              <label>Name</label>
-              <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
+          {showAbout && (
+            // about-inplace replaces the logo area (no modal)
+            <div className="about-inplace background-color-light">
+              <button className="about-inplace-close" onClick={() => setShowAbout(false)}>
+                &times;
+              </button>
+              <div className="about-inplace-inner">
+                <h2>Welcome to CommunityPro</h2>
+                <p>
+                  <strong>CommunityPro</strong> is your comprehensive platform for community engagement and civic responsibility.
+                </p>
+
+                <h3>Key Features</h3>
+                <ul>
+                  <li>Track and report community activities</li>
+                  <li>Real-time complaints management</li>
+                  <li>Direct communication with authorities</li>
+                  <li>Event announcements and updates</li>
+                  <li>Transparent deed verification system</li>
+                </ul>
+
+                <p>
+                  <strong>Our Mission:</strong> Building stronger, more connected communities through transparency and collaboration.
+                </p>
+              </div>
             </div>
           )}
-          <div className="mb-3">
-            <label>Email</label>
-            <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
-          </div>
-          <div className="mb-3">
-            <label>Password</label>
-            <input type="password" className="form-control" name="password" value={formData.password} onChange={handleChange} required />
-          </div>
-          <button type="submit" className="btn btn-success w-100">{isLogin ? 'Login' : 'Signup'}</button>
-        </form>
-
-        <div className="text-center mt-3">
-          <small>
-            {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-            <span className="text-primary" role="button" style={{ cursor: 'pointer' }} onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Signup' : 'Login'}
-            </span>
-          </small>
         </div>
       </div>
     </div>
@@ -88,4 +157,3 @@ const LoginSignup = () => {
 };
 
 export default LoginSignup;
-

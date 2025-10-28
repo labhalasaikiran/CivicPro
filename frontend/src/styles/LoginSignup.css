@@ -1,0 +1,417 @@
+.login-bg {
+  /* force the auth page to exactly fill viewport and hide outer scrollbar */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* NO page scrollbar on login/signup */
+}
+.login-bg.login-gradient {
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.login-bg.login-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--auth-bg-image);
+  background-size: cover;
+  background-position: center;
+  filter: blur(3px);
+  transform: scale(1.1);
+  transition: background-image 0.5s ease-in-out;
+  z-index: -1;
+}
+.login-bg.is-signup::before {
+  background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+}
+.login-bg.is-login::before {
+  background-image: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+}
+.login-row {
+  display: flex;
+  width: 100%;
+  /* ensure row never exceeds viewport height */
+  max-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 24px; /* reduced padding to avoid overflow */
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Logo side: do not allow it to push page taller than viewport */
+.login-logo-side {
+  flex: 0 0 60vw;
+  max-width: 60vw;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* Constrain logo so it cannot force scrolling */
+.login-logo-large {
+  width: 48%;
+  max-width: 360px;
+  height: auto;
+  max-height: calc(100vh - 160px); /* leave room for card and paddings */
+  object-fit: cover;
+  border-radius: 50%;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+/* Login card side: medium size and not full viewport height */
+.login-right {
+  flex: 0 0 36vw;
+  min-width: 320px;
+  max-width: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  height: auto;
+}
+
+/* card sizing reduced to medium to avoid vertical overflow */
+.login-card,
+.login-card-attractive {
+  min-height: 320px;
+  width: 100%;
+  max-width: 380px;
+  max-height: calc(100vh - 120px); /* keep card within viewport */
+  padding: 24px;
+  overflow: auto; /* internal scroll if card content exceeds available space */
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(24, 119, 242, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+.login-card-attractive {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.login-card-attractive:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* tighten spacings to avoid overflow */
+.login-welcome { margin-top: 0; margin-bottom: 6px; }
+.login-tagline { margin-bottom: 10px; }
+.login-field { margin-bottom: 12px; }
+.login-field {
+  opacity: 1;
+  height: auto;
+  margin-bottom: 16px;
+  transition: none; /* Remove transitions */
+}
+form {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Button and input enhancements */
+.login-role-btn {
+  background: #f8f9fa;
+  color: #1a73e8;
+  border: 2px solid #e8eaed;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.login-role-btn.active {
+  background: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+}
+.login-field input {
+  background: #f8f9fa;
+  border: 2px solid #e8eaed;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+.login-field input:focus {
+  border-color: #1a73e8;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+}
+.login-submit-btn {
+  background: linear-gradient(45deg, #1a73e8, #34a853);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+.login-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+}
+
+/* About section modal */
+.about-app-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  background-image: inherit;
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  padding: 20px;
+}
+
+.about-app-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+  position: relative;
+  text-align: left;
+}
+
+.about-app-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.about-app-close:hover {
+  background: #f0f2f5;
+  color: #1a73e8;
+}
+
+.about-app-content h2 {
+  color: #1a73e8;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.about-app-content ul {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.about-app-content li {
+  margin: 12px 0;
+  color: #444;
+}
+
+/* INLINE about panel that replaces the logo (not modal) */
+.about-inplace {
+  width: 100%;
+  max-width: 760px;
+  max-height: calc(100vh - 120px);
+  overflow: auto; /* internal scrolling allowed */
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.96);
+  border-radius: 14px;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.12);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  /* ensure the section doesn't create page-level scroll when opened */
+  padding: 24px;
+  background: transparent; /* let global background show through */
+}
+
+/* Force readable colors inside auth containers */
+.login-card, .login-card-attractive {
+  color: #071123; /* dark readable text */
+}
+
+/* headings inside login card */
+.login-welcome {
+  color: #072139;
+  font-weight: 800;
+}
+.login-card-title {
+  color: #072139;
+  font-weight: 700;
+}
+
+/* tagline and labels */
+.login-tagline, .login-field label {
+  color: #394a57;
+}
+
+/* ensure toggle/link contrast */
+.login-toggle-link, .login-forgot a {
+  color: #0b66ff;
+  font-weight: 700;
+}
+
+/* about-inplace is a light panel; ensure text is dark and readable */
+.about-inplace {
+  background: rgba(255,255,255,0.98);
+  color: #071123;
+}
+.about-inplace-inner h2 {
+  color: #0b4fd6;
+}
+.about-inplace-inner p, .about-inplace-inner li {
+  color: #233142;
+}
+
+/* when background is dark (global bg), make sure any overlaid text has enough contrast */
+.login-bg.is-login::before,
+.login-bg.is-signup::before {
+  /* keep pseudo background but ensure contrast by slightly darkening overlay */
+  filter: blur(3px) contrast(0.95);
+}
+
+/* reduce any faint text color that might be hard to read */
+.login-logo-side .hide, .login-logo-side .login-logo-large {
+  /* nothing here, but keep room if image overlays text */
+}
+
+/* ensure buttons labels are visible */
+.login-role-btn, .login-submit-btn {
+  color: #072139;
+  font-weight: 700;
+}
+
+/* improve focus outlines for keyboard users */
+.login-field input:focus, .login-role-btn:focus, .login-submit-btn:focus {
+  outline: 3px solid rgba(11,102,255,0.14);
+  outline-offset: 2px;
+}
+
+/* small-screen adjustments */
+@media (max-width: 900px) {
+  .login-card, .about-inplace {
+    color: #071123;
+  }
+}
+
+/* responsive: stack and scale down on small screens */
+@media (max-width: 900px) {
+  .login-row {
+    flex-direction: column-reverse;
+    padding: 12px;
+  }
+  .login-logo-side {
+    flex: 0 0 auto;
+    max-width: 100%;
+    padding: 12px;
+  }
+  .login-right {
+    flex: 0 0 auto;
+    max-width: 95%;
+    margin-bottom: 8px;
+  }
+  .login-logo-large {
+    width: 220px;
+    height: auto;
+    max-height: calc(60vh);
+  }
+  .login-card, .login-card-attractive {
+    max-width: 94%;
+    max-height: calc(100vh - 140px);
+    padding: 16px;
+  }
+  .about-inplace {
+    max-width: 94%;
+    max-height: calc(100vh - 120px);
+    padding: 12px;
+  }
+}
+
+/* very small devices */
+@media (max-width: 420px) {
+  .login-logo-large { width: 64vw; max-height: 220px; }
+  .login-card { padding: 18px; }
+}
+
+/* ensure no accidental body scrollbar from this component */
+.login-bg { overflow: hidden; }
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-field label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.login-field input {
+  height: 45px;
+  padding: 0 16px;
+  font-size: 1rem;
+  border: 2px solid #e8eaed;
+  border-radius: 8px;
+  background: #f8f9fa;
+  transition: all 0.2s ease;
+}
+
+.login-field input:focus {
+  border-color: #1a73e8;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+}
+
+.login-submit-btn {
+  margin-top: 12px;
+  height: 48px;
+}
+
+.login-forgot {
+  margin-top: 12px;
+  text-align: right;
+}

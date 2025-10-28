@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import API from '../api/axios';
 
 const Announcements = () => {
@@ -10,35 +10,108 @@ const Announcements = () => {
         const res = await API.get('/civilian/announcements');
         setAnnouncements(res.data);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching announcements:', err);
       }
     };
     fetchAnnouncements();
   }, []);
 
-  return (
-    <div className="container mt-5">
-      <h3 className="mb-4">Community Announcements</h3>
+  const now = new Date();
+  const upcomingAnnouncements = announcements.filter(
+    (a) => new Date(a.eventDateTime) > now
+  );
+  const pastAnnouncements = announcements.filter(
+    (a) => new Date(a.eventDateTime) <= now
+  );
 
-      {announcements.length === 0 ? (
-        <p>No announcements yet.</p>
+  const renderCountdown = (eventDateTime) => {
+    const eventTime = new Date(eventDateTime).getTime();
+    const diff = eventTime - Date.now();
+    if (diff <= 0) return <span className="text-danger">Event Started</span>;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    return (
+      <span className="text-success">
+        Starts in {hours}h {minutes}m {seconds}s
+      </span>
+    );
+  };
+
+  return (
+    <div className="container mt-5" style={{ maxWidth: '700px' }}>
+      <h3 className="mb-4">Community Announcements</h3>
+      <hr className="my-5" />
+
+      {/* UPCOMING EVENTS */}
+      <h4 className="text-primary">Upcoming Events</h4>
+      {upcomingAnnouncements.length === 0 ? (
+        <p>No upcoming events.</p>
       ) : (
-        announcements.map((a, index) => (
-          <div className="card mb-3" key={index}>
+        upcomingAnnouncements.map((a, idx) => (
+          <div key={idx} className="card mb-3 shadow-sm">
             <div className="card-body">
-              <h5 className="card-title">{a.title}</h5>
-              <p className="card-text">{a.description}</p>
+              <h5>{a.title}</h5>
+              <p>{a.description}</p>
               {a.mediaUrl && (
-                a.mediaType === 'image' ? (
-                  <img src={a.mediaUrl} alt="announcement" width="100%" />
-                ) : a.mediaType === 'video' ? (
-                  <video controls src={a.mediaUrl} width="100%" />
-                ) : (
-                  <audio controls src={a.mediaUrl} />
-                )
+                <div className="mb-2">
+                  {a.mediaType === 'image' && (
+                    <img
+                      src={a.mediaUrl}
+                      className="img-fluid rounded"
+                      alt="event"
+                      style={{ maxHeight: '300px', width: '100%' }}
+                    />
+                  )}
+                  {a.mediaType === 'video' && (
+                    <video src={a.mediaUrl} controls className="w-100 rounded" />
+                  )}
+                  {a.mediaType === 'audio' && (
+                    <audio src={a.mediaUrl} controls className="w-100" />
+                  )}
+                </div>
               )}
-              <small className="text-muted d-block mt-2">
-                Posted on {new Date(a.createdAt).toLocaleString()}
+              <div className='countdown text-end'>{renderCountdown(a.eventDateTime)}</div>
+              <small className=" text-end ">
+                Scheduled on: {new Date(a.eventDateTime).toLocaleString()}
+              </small>
+            </div>
+          </div>
+        ))
+      )}
+
+      <hr className="my-5" />
+
+      {/* PAST EVENTS */}
+      <h4 className="text-secondary">Past Events</h4>
+      {pastAnnouncements.length === 0 ? (
+        <p>No past events.</p>
+      ) : (
+        pastAnnouncements.map((a, idx) => (
+          <div key={idx} className="card mb-3 shadow-sm">
+            <div className="card-body">
+              <h5>{a.title}</h5>
+              <p>{a.description}</p>
+              {a.mediaUrl && (
+                <div className="mb-2">
+                  {a.mediaType === 'image' && (
+                    <img
+                      src={a.mediaUrl}
+                      className="img-fluid rounded"
+                      alt="event"
+                      style={{ maxHeight: '300px' }}
+                    />
+                  )}
+                  {a.mediaType === 'video' && (
+                    <video src={a.mediaUrl} controls className="w-100 rounded" />
+                  )}
+                  {a.mediaType === 'audio' && (
+                    <audio src={a.mediaUrl} controls className="w-100" />
+                  )}
+                </div>
+              )}
+              <small className="text-muted text-end">
+                Event occurred on: {new Date(a.eventDateTime).toLocaleString()}
               </small>
             </div>
           </div>

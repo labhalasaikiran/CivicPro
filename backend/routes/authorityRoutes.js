@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const protect = require('../middleware/authMiddleware');
 const roleCheck = require('../middleware/roleMiddleware');
-const User = require('../models/User');
+// const User = require('../models/User');
 const {
   getDashboard,
   postAnnouncement,
@@ -9,7 +9,13 @@ const {
   viewComplaints,
   fileComplaint,
   searchCivilians,
-  reportOffender
+  reportOffender,
+  getProfile,
+  updateProfile,
+  getPendingGoodDeeds,
+  validateGoodDeed,
+  getPendingComplaints,
+  validateComplaint
 } = require('../controllers/authorityController');
 
 
@@ -20,7 +26,13 @@ router.get('/announcements', getAnnouncements);
 router.get('/complaints', viewComplaints);
 router.post('/complaints', fileComplaint);
 router.post('/report', reportOffender);
-router.get('/search-civilian', searchCivilians);
+router.get('/search-civilians', searchCivilians);
+router.get('/profile', getProfile);
+router.put('/profile', updateProfile);
+router.get('/pending-good-deeds', getPendingGoodDeeds);
+router.get('/pending-complaints', getPendingComplaints);
+router.put('/validate-good-deed/:id', validateGoodDeed);
+router.put('/validate-complaint/:id', validateComplaint);
 
 
 module.exports = router;

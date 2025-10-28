@@ -4,7 +4,7 @@ const Comment = require('../models/Comment');
 // fetching good deeds
 exports.getCommitteeFeed = async (req, res) => {
   try {
-    const deeds = await GoodDeed.find()
+    const deeds = await GoodDeed.find({ status: 'approved' })
       .populate('userId', 'name role') 
       .sort({ createdAt: -1 });
 
@@ -24,25 +24,6 @@ res.json(deedsWithComments);
   }
 };
 
-// comment on a good deed
-// exports.addComment = async (req, res) => {
-//   try {
-//     const { goodDeedId, content } = req.body;
-
-//     const comment = await Comment.create({
-//       goodDeedId,
-//       userId: req.user._id,
-//       content
-//     });
-
-//     const populatedComment = await comment.populate('userId', 'name role');
-
-//     res.status(201).json(populatedComment);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Failed to add comment' });
-//   }
-// };
 
 
 exports.addComment = async (req, res) => {

@@ -58,8 +58,8 @@ const CivilianComplaints = () => {
           <textarea className="form-control" rows="4" value={content} onChange={e => setContent(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label>Attach Media (optional)</label>
-          <input type="file" className="form-control" accept="image/*,video/*,audio/*" onChange={e => setFile(e.target.files[0])} />
+          <label>Attach Media * </label>
+          <input type="file" className="form-control" accept="image/*,video/*,audio/*" onChange={e => setFile(e.target.files[0])}  required/>
         </div>
         <button className="btn btn-danger">Submit</button>
       </form>

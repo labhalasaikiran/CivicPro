@@ -12,15 +12,21 @@ import AuthorityComplaints from './pages/AuthorityComplaints';
 import ReportCivilian from './pages/ReportCivilian';
 import CommitteeFeed from './pages/CommitteeFeed';
 import AuthoritySearch from './pages/AuthoritySearch';
+import Home from './pages/Home';
 import './App.css';
-
+import AuthorityProfile from './pages/AuthorityProfile';
+import AuthorityAuthentication from './pages/AuthorityAuthentication';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 
 
 function App() {
   return (
     <Router>
+      
       <Routes>
+         
         <Route path="/" element={<LoginSignup />} />
         <Route path="/civilian" element={
           <ProtectedRoute role="civilian">
@@ -55,6 +61,11 @@ function App() {
     <CivilianProfile />
   </ProtectedRoute>
 } />
+<Route path="/civilian/Home" element={
+  <ProtectedRoute role="civilian">
+    <Home />
+  </ProtectedRoute>
+} />
 
 <Route path="/authority/announcements" element={
   <ProtectedRoute role="authority">
@@ -76,10 +87,20 @@ function App() {
 
 
 <Route path="/committee-feed" element ={<CommitteeFeed/>}/>
-
+<Route path="/authority/profile" element={
+  <ProtectedRoute role="authority">
+    <AuthorityProfile />
+  </ProtectedRoute>
+} />
 
 <Route path="/authority/search" element={<AuthoritySearch />} />
-
+<Route path="/authority/authentication" element={
+  <ProtectedRoute role="authority">
+    <AuthorityAuthentication />
+  </ProtectedRoute>
+} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

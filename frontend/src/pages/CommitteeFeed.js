@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios'; 
-import { getUser } from '../utils/auth'; 
 
 const CommitteeFeed = () => {
   const [feed, setFeed] = useState([]);
   const [comments, setComments] = useState({}); 
-  const user = getUser(); 
 
   useEffect(() => {
     fetchFeed();
